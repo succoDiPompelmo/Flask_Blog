@@ -1,10 +1,15 @@
 import os
+import string
+import random
+from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from flaskblog.models import User, Post
 from flaskblog import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 posts = [
     {
@@ -70,11 +75,16 @@ def logout():
 
 
 def save_picture(form_picture):
-    random_hex = os.urandom(8)
+    random_hex = id_generator(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_filename = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_filename)
-    form_picture.save(picture_path)
+
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumnail(output_size)
+
+    i.save(picture_path)
 
     return picture_filename
 
