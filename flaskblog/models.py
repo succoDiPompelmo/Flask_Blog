@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
 
     # DEFINE HOW OUR OBJECT IS PRINTED OUT
     def __repr__(self):
-        return self.username
+        return self.username + " " + self.email
 
 
 class Post(db.Model):
@@ -28,4 +28,5 @@ class Post(db.Model):
 
     # DEFINE HOW OUR OBJECT IS PRINTED OUT
     def __repr__(self):
+        c = self.user_id
         return self.title
